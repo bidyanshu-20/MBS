@@ -40,3 +40,60 @@
 .read-the-docs {
   color: #888;
 }
+
+/* This css is for styling the list of user inside the AdminDashboard*/
+@keyframes slideFromLeft {
+  0% {
+    transform: translateX(-120px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideFromRight {
+  0% {
+    transform: translateX(120px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Utility animation classes */
+.animate-slide-from-left {
+  animation: slideFromLeft 0.7s ease-out forwards;
+}
+
+.animate-slide-from-right {
+  animation: slideFromRight 0.7s ease-out forwards;
+}
+
+
+/* This css is for the style of search bar inside adminDashboard*/
+search-flex {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem 2rem;
+    color: var(--grey);
+    background-color: var(--darkgrey);
+    width: 80%;
+    margin: auto;
+    border-radius: 3rem;
+    margin-top: 2rem;
+}
+
+.search-input{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    width: 100%; 
+    font-family: 'Courier New', Courier, monospace;
+}

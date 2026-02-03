@@ -6,8 +6,7 @@ export const signup = async (req, res, next) => {
 
     // console.log(req.body);
 
-    const { name, email, password, rollno, role } = req.body;
-
+    const { name, email, password, rollno} = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -26,7 +25,7 @@ export const signup = async (req, res, next) => {
     }
 
     const hashedPassword = bcryptjs.hashSync(password, 10);
-    const newUser = new User({ name, email, password: hashedPassword, rollno, role });
+    const newUser = new User({ name, email, password: hashedPassword, rollno, role:"user" });
     try {
         await newUser.save();
         res.status(201).json("User Created successfully");
@@ -41,11 +40,17 @@ export const signin = async (req, res, next) => {
     try {
         const validUser = await User.findOne({ email });
         if (!validUser) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
         }
         const isMatch = bcryptjs.compareSync(password, validUser.password);
         if (!isMatch) {
-            return res.status(401).json({ message: "something went wrong.." });
+            return res.status(401).json({
+                success: false,
+                message: "Invalid credentials"
+            });
         }
 
         // if (validUser.role !== role) {

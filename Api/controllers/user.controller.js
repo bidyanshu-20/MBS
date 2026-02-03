@@ -3,9 +3,9 @@ import User from "../models/user.model.js";
 export const getAllUsersForAdmin = async (req, res) => {
   try {
     // 1️⃣ Only fetch normal users (exclude admins)
-    const users = await User.find({ role: "User" })
+    const users = await User.find({ role: "user" })
       .select("name rollno");
-
+      // console.log(users);
     res.status(200).json({
       success: true,
       users,
@@ -21,6 +21,6 @@ export const getAllUsersForAdmin = async (req, res) => {
 
 export const test = (req,res)=>{
     res.json({
-        massage:'hello world...',
+        message:'hello world...',
     });
 }

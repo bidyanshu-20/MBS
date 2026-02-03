@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from 'react';
+import { toast } from "react-toastify";
+
 const Login = () => {
 
     const navigate = useNavigate();
@@ -18,6 +20,10 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         // setError(false);
+        if (!formData.email || !formData.password) {
+            toast.warning("Please fill all fields");
+            return;
+        }
         setLoading(true);
         try {
             const res = await fetch("/api/auth/signin", {
@@ -34,19 +40,20 @@ const Login = () => {
 
                 setLoading(false);
                 setError(data.message);
+                toast.error("Login failed");
                 return;
             }
             setLoading(false);
             setError(null);
 
-
+            toast.success("Login successful 🎉");
             localStorage.setItem("token", data.token);
             localStorage.setItem("role", data.user.role);
 
             // Role-based redirect
             // console.log("Helloo.....");
             // console.log(data);
-            
+
             const role = data.user.role.toLowerCase();
             // console.log("----------");
             // console.log(data.user.rollno)
@@ -59,6 +66,7 @@ const Login = () => {
         } catch (error) {
             setLoading(false);
             setError(error.message);
+            toast.error("Something........ went wrong!");
         }
     };
 

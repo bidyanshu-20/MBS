@@ -1,11 +1,14 @@
 import express from "express";
-import { getUserMessBillByRollno } from "../controllers/messdata.controller.js";
-// import { verifyToken } from "../middlewares/verifyToken.js";
+import { getUserMessBill } from "../controllers/messdata.controller.js";
+import  verifyUser  from "../controllers/auth.middleware.js";
 
 const router = express.Router();
-
-router.get("/user/messbill/:rollno",getUserMessBillByRollno);
+router.get("/user/messbill",verifyUser,getUserMessBill);
 
 export default router;
+
+
+
+
 
 

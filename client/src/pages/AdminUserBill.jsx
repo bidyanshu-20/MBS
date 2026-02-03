@@ -24,7 +24,8 @@ const AdminUserBill = () => {
       credentials: "include",
       body: JSON.stringify({ month, days }),
     });
-
+    console.log("rollno is: " +rollno);
+    console.log("Type of rollno:", typeof rollno);
     alert("Mess bill saved");
   };
 

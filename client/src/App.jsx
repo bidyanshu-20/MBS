@@ -7,6 +7,9 @@ import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import MainLayout from "./layouts/MainLayout";
 import AdminUserBill from "./pages/AdminUserBill";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+
 function App() {
   return (
     <BrowserRouter>
@@ -20,7 +23,12 @@ function App() {
       </Routes> */}
       {/* Ye uper ke code basic method tha jaha pe navbar alway visible tha ------------ */}
 
-
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+      />
+      
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />

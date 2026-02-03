@@ -17,7 +17,6 @@ const messBillSchema = new mongoose.Schema(
       type: String, // "2026-01"
       required: true,
     },
-
     days: [
       {
         date: String,       // "2026-01-01"

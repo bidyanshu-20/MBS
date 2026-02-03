@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+
+
 const SignUp = () => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
@@ -15,7 +19,10 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (!formData.name || !formData.email || !formData.password || !formData.rollno || !formData.role) {
+      toast.warning("Please fill all fields");
+      return;
+    }
     try {
       // console.log(formData);
       setLoading(true);
@@ -33,15 +40,22 @@ const SignUp = () => {
 
         setLoading(false);
         setError(data.message);
+        toast.error(data.message || "Signup failed");
+
         return;
       }
       setLoading(false);
       setError(null);
-      navigate('/login');
+      toast.success("Account created successfully 🎉");
+
+      setTimeout(() => {
+        navigate('/login');
+      }, 1500);
     }
     catch (error) {
       setLoading(false);
       setError(error.message);
+      toast.error("Something went wrong!");
     }
 
   }
@@ -99,7 +113,7 @@ const SignUp = () => {
             />
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-gray-300 mb-1">Role (Admin/User)</label>
             <select
               id="role"
@@ -111,7 +125,7 @@ const SignUp = () => {
               <option value="admin">Admin</option>
               <option value="user">User</option>
             </select>
-          </div>
+          </div> */}
 
           <button
             disabled={loading}
@@ -122,7 +136,7 @@ const SignUp = () => {
           </button>
         </form>
         <p className="text-gray-400 text-sm text-center mt-6">
-         Already have an Account..{" "}
+          Already have an Account..{" "}
           <Link
             to="/login"
             className="text-blue-400 hover:text-blue-500 font-medium"
