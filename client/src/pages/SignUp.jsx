@@ -19,7 +19,7 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.password || !formData.rollno || !formData.role) {
+    if (!formData.name || !formData.email || !formData.password || !formData.rollno ) {
       toast.warning("Please fill all fields");
       return;
     }

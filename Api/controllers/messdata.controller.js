@@ -39,7 +39,8 @@ export const getUserMessBill = async (req, res) => {
     // console.log("Logged-in-user:", req.user); 
 
     const bills = await messBill.find({ user: req.user._id });
-
+    // console.log("user mess bill ");
+    // console.log(bills);
     res.status(200).json({
       user: {
         name: req.user.name,

@@ -4,12 +4,15 @@ import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 import billingRouter from "./routes/messbill.route.js";
 import messdataRouter from './routes/messdata.route.js';
+import getBillforAdminRouter from './routes/getbillForAdmin.route.js'
 import cors from 'cors'
-import env from 'dotenv';
-env.config();
+import dotenv from "dotenv";
+dotenv.config();
 
+// console.log(process.env.MONGOURI);
 mongoose.connect(process.env.MONGOURI).then(() => console.log("MongoDB connected"))
     .catch((err) => console.error("MongoDB connection error:", err));
+
 
 const app = express();
 app.use(cors());
@@ -26,6 +29,8 @@ app.use('/api', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api', billingRouter);
 app.use('/api',messdataRouter);
+app.use('/api/admin',getBillforAdminRouter);
+
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;

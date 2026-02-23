@@ -64,13 +64,19 @@ import messBill from "../models/messBilling.model.js";
 //     });
 //   }
 // };
+// ------------------------------------------------------------ //
+
+
 
 export const messbilling = async (req, res) => {
   try {
-    const rollno = Number(req.params.rollno);
+    const rollno = req.params.rollno;   // keep as string
     const { month, days } = req.body;
 
+    // console.log("BODY RECEIVED:", req.body);
+
     const user = await User.findOne({ rollno });
+
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -80,7 +86,8 @@ export const messbilling = async (req, res) => {
 
     let bill = await messBill.findOne({ user: user._id, month });
 
-    // 👉 If bill already exists
+    // If bill exists → update days
+    // console.log("My pAST Billing is ", bill);
     if (bill) {
       days.forEach((newDay) => {
         const index = bill.days.findIndex(
@@ -89,38 +96,37 @@ export const messbilling = async (req, res) => {
         );
 
         if (index !== -1) {
-          // ✅ ADD charge instead of overwrite
-          bill.days[index].charge =
-            Number(bill.days[index].charge) +
-            Number(newDay.charge);
-
-          bill.days[index].present = newDay.present;
+          //  Update existing date
+          bill.days[index].breakfast = (bill.days[index].breakfast || 0) + Number(newDay.breakfast || 0);
+          bill.days[index].lunch = (bill.days[index].lunch || 0) + Number(newDay.lunch || 0);
+          bill.days[index].dinner = (bill.days[index].dinner || 0) + Number(newDay.dinner || 0);
+          bill.days[index].extras = (bill.days[index].extras || 0) + Number(newDay.extras || 0);
         } else {
-          // 🆕 new day
+          //  Add new date
           bill.days.push({
             date: newDay.date,
-            present: newDay.present,
-            charge: Number(newDay.charge),
+            breakfast: Number(newDay.breakfast) || 0,
+            lunch: Number(newDay.lunch) || 0,
+            dinner: Number(newDay.dinner) || 0,
+            extras: Number(newDay.extras) || 0,
           });
         }
       });
     } else {
-      
+      //  Create new monthly bill
       bill = new messBill({
         user: user._id,
         rollno,
         month,
         days: days.map((d) => ({
           date: d.date,
-          present: d.present,
-          charge: Number(d.charge),
+          breakfast: Number(d.breakfast) || 0,
+          lunch: Number(d.lunch) || 0,
+          dinner: Number(d.dinner) || 0,
+          extras: Number(d.extras) || 0,
         })),
       });
     }
-    
-    bill.totalAmount = bill.days
-      .filter((day) => day.present)
-      .reduce((sum, day) => sum + Number(day.charge), 0);
 
     await bill.save();
 
@@ -128,6 +134,7 @@ export const messbilling = async (req, res) => {
       success: true,
       bill,
     });
+
   } catch (error) {
     console.error("ERROR:", error);
     res.status(500).json({

@@ -1,8 +1,265 @@
+// import { useEffect, useState } from "react";
+// import jsPDF from "jspdf";
+// import html2canvas from "html2canvas";
 
-import { useEffect, useState, useRef } from "react";
+// const UserDashboard = () => {
+//   const [bills, setBills] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [userdata, setUserdata] = useState(null);
+
+//   // ✅ Year & Month states
+//   const currentDate = new Date();
+//   const [selectedYear, setSelectedYear] = useState(
+//     currentDate.getFullYear().toString()
+//   );
+//   const [selectedMonth, setSelectedMonth] = useState(
+//     (currentDate.getMonth() + 1).toString().padStart(2, "0")
+//   );
+
+//   useEffect(() => {
+//     const monthsForYear = bills
+//       .filter((bill) => bill.month.startsWith(selectedYear))
+//       .map((bill) => bill.month.split("-")[1]);
+
+//     if (monthsForYear.length > 0) {
+//       setSelectedMonth(monthsForYear[0]);
+//     }
+//   }, [selectedYear, bills]);
+
+
+//   useEffect(() => {
+//     const fetchBills = async () => {
+//       try {
+//         const token = localStorage.getItem("token");
+
+//         const res = await fetch("/api/user/messbill", {
+//           method: "GET",
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "application/json",
+//           },
+//         });
+
+//         const data = await res.json();
+
+//         if (data.success && Array.isArray(data.bills)) {
+//           setBills(data.bills);
+//           setUserdata(data.user);
+//         } else {
+//           setBills([]);
+//         }
+//       } catch (err) {
+//         console.error(err);
+//         setError("Failed to load mess bills");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchBills();
+//   }, []);
+
+//   const logout = () => {
+//     localStorage.removeItem("token");
+//     window.location.href = "/";
+//   };
+
+//   const handleDownloadPdf = async (billId) => {
+//     console.log("I am Pdf convertor");
+//   };
+
+//   // ✅ Extract unique years
+//   const years = [
+//     ...new Set(bills.map((bill) => bill.month.split("-")[0])),
+//   ];
+
+//   // ✅ Filter bill by year + month
+//   const filteredBill = bills.find((bill) => {
+//     const [year, month] = bill.month.split("-");
+//     return year === selectedYear && month === selectedMonth;
+//   });
+
+//   if (loading) {
+//     return (
+//       <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
+//         Loading...
+//       </div>
+//     );
+//   }
+
+//   if (error) {
+//     return (
+//       <div className="min-h-screen bg-slate-900 text-red-400 flex items-center justify-center">
+//         {error}
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="min-h-screen bg-slate-900 text-white p-6">
+//       {/* 🔹 TOP BAR */}
+//       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+//         <h1 className="text-2xl font-bold">
+//           👋 Welcome,{" "}
+//           <span className="text-orange-400">
+//             {userdata?.name}
+//           </span>
+//         </h1>
+
+//         <button
+//           onClick={logout}
+//           className="bg-red-500 hover:bg-red-600 px-5 py-2 rounded-md font-semibold w-fit"
+//         >
+//           Sign Out
+//         </button>
+//       </div>
+
+//       {/* 🔹 USER INFO + FILTER */}
+//       <div className="flex justify-between items-start mb-10 flex-wrap gap-6">
+//         {/* USER DETAILS */}
+//         <div className="bg-slate-800 p-5 rounded-xl shadow-lg w-full max-w-sm">
+//           <h2 className="text-lg font-semibold mb-3 border-b border-slate-600 pb-2">
+//             👤 User Details
+//           </h2>
+
+//           <p className="text-sm mb-1">
+//             <span className="text-gray-400">Name:</span>{" "}
+//             {userdata?.name}
+//           </p>
+//           <p className="text-sm mb-1">
+//             <span className="text-gray-400">Roll No:</span>{" "}
+//             {userdata?.rollNo}
+//           </p>
+//           <p className="text-sm">
+//             <span className="text-gray-400">Email:</span>{" "}
+//             {userdata?.email}
+//           </p>
+//         </div>
+
+//         {/* 🔥 YEAR & MONTH FILTER */}
+//         <div className="flex gap-4 items-end flex-wrap">
+//           {/* YEAR */}
+//           <div>
+//             <label className="block text-sm mb-1 text-gray-400">
+//               Select Year
+//             </label>
+//             <select
+//               value={selectedYear}
+//               onChange={(e) => setSelectedYear(e.target.value)}
+//               className="bg-slate-700 px-4 py-2 rounded-lg"
+//             >
+//               {years.map((year) => (
+//                 <option key={year} value={year}>
+//                   {year}
+//                 </option>
+//               ))}
+//             </select>
+//           </div>
+
+//           {/* MONTH */}
+//           <div>
+//             <label className="block text-sm mb-1 text-gray-400">
+//               Select Month
+//             </label>
+//             <select
+//               value={selectedMonth}
+//               onChange={(e) => setSelectedMonth(e.target.value)}
+//               className="bg-slate-700 px-4 py-2 rounded-lg"
+//             >
+//               {[
+//                 "01", "02", "03", "04", "05", "06",
+//                 "07", "08", "09", "10", "11", "12"
+//               ].map((m, index) => (
+//                 <option key={m} value={m}>
+//                   {new Date(0, index).toLocaleString("en-US", {
+//                     month: "long",
+//                   })}
+//                 </option>
+//               ))}
+//             </select>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* 🔹 MESS BILL */}
+//       {!filteredBill ? (
+//         <p className="text-center text-gray-400">
+//           No mess bill available for selected month
+//         </p>
+//       ) : (
+//         <div
+//           id={`bill-${filteredBill._id}`}
+//           className="bg-slate-800 rounded-xl p-5 mb-6 shadow-lg"
+//         >
+//           {/* MONTH HEADER */}
+//           <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-3">
+//             <div className="text-xl font-semibold">
+//               {new Date(`${filteredBill.month}-01`).toLocaleDateString(
+//                 "en-US",
+//                 { month: "long", year: "numeric" }
+//               )}
+//             </div>
+
+//             <span className="text-green-400 text-lg font-bold">
+//               Total: ₹{filteredBill.totalAmount}
+//             </span>
+
+//             <button
+//               onClick={() => handleDownloadPdf(filteredBill._id)}
+//               className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded"
+//             >
+//               Download PDF
+//             </button>
+//           </div>
+
+//           {/* DAYS TABLE */}
+//           <div className="overflow-x-auto">
+//             <table className="w-full text-sm border border-slate-700">
+//               <thead className="bg-slate-700">
+//                 <tr>
+//                   <th className="p-2 border">Date</th>
+//                   <th className="p-2 border">Breakfast</th>
+//                   <th className="p-2 border">Lunch</th>
+//                   <th className="p-2 border">Dinner</th>
+//                   <th className="p-2 border">Extras</th>
+//                   <th className="p-2 border">Total</th>
+//                 </tr>
+//               </thead>
+//               <tbody>
+//                 {filteredBill.days.map((day, index) => (
+//                   <tr
+//                     key={index}
+//                     className="text-center hover:bg-slate-700"
+//                   >
+//                     <td className="p-2 border">
+//                       {new Date(day.date).toLocaleDateString(
+//                         "en-IN"
+//                       )}
+//                     </td>
+//                     <td className="p-2 border">₹{day.breakfast}</td>
+//                     <td className="p-2 border">₹{day.lunch}</td>
+//                     <td className="p-2 border">₹{day.dinner}</td>
+//                     <td className="p-2 border">₹{day.extras}</td>
+//                     <td className="p-2 border text-green-400 font-semibold">
+//                       ₹{day.total}
+//                     </td>
+//                   </tr>
+//                 ))}
+//               </tbody>
+//             </table>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default UserDashboard;
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
-import html2canvas from "html2canvas";
+import autoTable from 'jspdf-autotable';
 
 
 const UserDashboard = () => {
@@ -10,11 +267,29 @@ const UserDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [userdata, setUserdata] = useState(null);
+
+  const currentDate = new Date();
+  const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear().toString());
+  const [selectedMonth, setSelectedMonth] = useState((currentDate.getMonth() + 1).toString().padStart(2, "0"));
+
+  useEffect(() => {
+    const monthsForYear = bills
+      .filter((bill) => bill.month.startsWith(selectedYear))
+      .map((bill) => bill.month.split("-")[1]);
+
+    if (monthsForYear.length > 0) {
+      setSelectedMonth(monthsForYear[0]);
+    }
+  }, [selectedYear, bills]);
+
+  const navigate = useNavigate();
+
+
+
   useEffect(() => {
     const fetchBills = async () => {
       try {
-        const token = localStorage.getItem("token"); // 🔐 JWT
-
+        const token = localStorage.getItem("token");
         const res = await fetch("/api/user/messbill", {
           method: "GET",
           headers: {
@@ -25,11 +300,9 @@ const UserDashboard = () => {
 
         const data = await res.json();
 
-        console.log("Bills API Response:", data);
-
         if (data.success && Array.isArray(data.bills)) {
           setBills(data.bills);
-          setUserdata(data.user)
+          setUserdata(data.user);
         } else {
           setBills([]);
         }
@@ -44,166 +317,331 @@ const UserDashboard = () => {
     fetchBills();
   }, []);
 
+  // useEffect(()=>{
+  //   console.log("=====>",userdata)
+  //   console.log("---->",bills);
+  // })
 
 
-  const printRef = useRef(null);
-  const handleDownloadPdf = async () => {
-    const element = printRef.current;
-    if (!element) {
+  const logout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
+
+  const handleDownloadPdf = (billId) => {
+    const bill = bills.find((b) => b._id === billId);
+    if (!bill) {
+      alert("Bill not found");
       return;
     }
-    // console.log(element);
-    const canvas = await html2canvas(element);
 
-    const data = canvas.toDataURL("image/png");
-    const pdf = new jsPDF({
+    const doc = new jsPDF({
       orientation: "portrait",
-      unit: "px",
+      unit: "mm",
       format: "a4",
     });
-    pdf.addImage(data, 'PNG', 0, 0, 100, 100);
-    pdf.save("example.pdf")
 
-  }
+    const pageWidth = doc.internal.pageSize.getWidth();
+
+    // ── Header ─────────────────────────────────────
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(30, 58, 138);
+
+    const monthYear = new Date(`${bill.month}-01`)
+      .toLocaleDateString("en-US", { month: "long", year: "numeric" });
+
+    doc.text(`Mess Bill - ${monthYear}`, 14, 20);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor(80);
+
+    doc.text(
+      `Student: ${userdata?.name || "-"}  |  Roll No: ${userdata?.rollno || "-"}`,
+      14,
+      30
+    );
+    doc.text(`Email: ${userdata?.email || "-"}`, 14, 36);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.setTextColor(34, 197, 94);
+    doc.text(
+      `Total: Rs. ${bill.totalAmount}`,
+      pageWidth - 14,
+      28,
+      { align: "right" }
+    );
+
+    // ── Table ─────────────────────────────────────
+    const tableColumn = ["Date", "Breakfast", "Lunch", "Dinner", "Extras", "Total"];
+
+    const tableRows = bill.days.map((day) => [
+      new Date(day.date).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+      }),
+      day.breakfast ? `Rs. ${day.breakfast}` : "-",
+      day.lunch ? `Rs. ${day.lunch}` : "-",
+      day.dinner ? `Rs. ${day.dinner}` : "-",
+      day.extras ? `Rs. ${day.extras}` : "-",
+      day.total ? `Rs. ${day.total}` : "-",
+    ]);
+
+    autoTable(doc, {
+      startY: 45,
+      head: [tableColumn],
+      body: tableRows,
+      theme: "grid",
+
+      styles: {
+        font: "helvetica",
+        fontSize: 9,
+        cellPadding: 3,
+        overflow: "linebreak",
+        halign: "center",
+      },
+
+      headStyles: {
+        fillColor: [30, 58, 138],
+        textColor: 255,
+        fontStyle: "bold",
+        halign: "center",
+      },
+
+      columnStyles: {
+        0: { cellWidth: 25 },
+        1: { halign: "right" },
+        2: { halign: "right" },
+        3: { halign: "right" },
+        4: { halign: "right" },
+        5: { halign: "right", fontStyle: "bold" },
+      },
+
+      margin: { left: 14, right: 14 },
+      tableWidth: "auto",
+    });
+
+    // ── Grand Total ───────────────────────────────
+    const finalY = doc.lastAutoTable?.finalY || 50;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.setTextColor(34, 197, 94);
+
+    doc.text(
+      `Grand Total: Rs. ${bill.totalAmount}`,
+      pageWidth - 14,
+      finalY + 10,
+      { align: "right" }
+    );
+
+    // ── Save ──────────────────────────────────────
+    const fileName = `Mess_Bill_${userdata?.rollno || "user"}_${bill.month}.pdf`;
+    doc.save(fileName);
+  };
+
+
+
+  const years = [...new Set(bills.map((bill) => bill.month.split("-")[0]))];
+
+  const filteredBill = bills.find((bill) => {
+    const [year, month] = bill.month.split("-");
+    return year === selectedYear && month === selectedMonth;
+  });
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
-        Loading...
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 to-indigo-950 flex items-center justify-center">
+        <div className="text-white text-xl flex items-center gap-3">
+          <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+          </svg>
+          Loading your bills...
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-900 text-red-400 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 to-indigo-950 flex items-center justify-center text-red-400 text-xl">
         {error}
       </div>
     );
   }
 
-  // this is logout function 
-  const logout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/";
-  };
+  const Updateuser = () => {
+    navigate("/edit-profile")
+    // console.log("I am update component");
+  }
+
 
 
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 text-white">
+      {/* Header / Top Bar */}
+      <header className="sticky top-0 z-10 backdrop-blur-lg bg-slate-900/60 border-b border-slate-700/50">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            Mess <span className="text-amber-400">Dashboard</span>
+          </h1>
 
-      {/* 🔹 TOP BAR */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-        <h1 className="text-2xl font-bold">
-          👋 Welcome to your dashboard,{" "}
-          <span className="text-orange-400">{userdata.name}</span>
-        </h1>
-
-        <button
-          onClick={logout}
-          className="bg-red-500 hover:bg-red-600 px-5 py-2 rounded-md font-semibold w-fit"
-        >
-          Sign Out
-        </button>
-      </div>
-
-      {/* 🔹 USER INFO CARD */}
-      <div className="flex justify-end mb-10">
-        <div className="bg-slate-800 p-5 rounded-xl shadow-lg w-full max-w-sm">
-          <h2 className="text-lg font-semibold mb-3 border-b border-slate-600 pb-2">
-            👤 User Details
-          </h2>
-
-          <p className="text-sm mb-1">
-            <span className="text-gray-400">Name:</span> {userdata.name}
-          </p>
-          <p className="text-sm mb-1">
-            <span className="text-gray-400">Roll No:</span> {userdata.rollno}
-          </p>
-          <p className="text-sm">
-            <span className="text-gray-400">Email:</span> {userdata.email}
-          </p>
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-slate-300">
+              Welcome back, <span className="text-amber-300 font-medium">{userdata?.name}</span>
+            </div>
+            <button
+              onClick={logout}
+              className="bg-red-600/90 hover:bg-red-700 px-5 py-2 rounded-lg font-medium transition-all hover:shadow-red-700/30 shadow-lg shadow-red-900/20"
+            >
+              Sign Out
+            </button>
+            <button
+              onClick={Updateuser}
+              className="bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded-lg font-medium transition-all hover:shadow-white-700/30 shadow-lg shadow-red-900/20"
+            >
+              Update
+            </button>
+          </div>
         </div>
-      </div>
+      </header>
 
-      {/* 🔹 MESS BILLS (UNCHANGED) */}
-      {bills.length === 0 ? (
-        <p className="text-center text-gray-400">
-          No mess bills available
-        </p>
-      ) : (
-        bills.map((bill) => (
-          <div
-            ref={printRef}
-            key={bill._id}
-            className="bg-slate-800 rounded-xl p-5 mb-6 shadow-lg"
-          >
-            {/* 🔹 MONTH HEADER */}
-            <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-3">
-              <div className="text-xl font-semibold p-2 rounded-md border-2 hover:bg-orange-400 w-fit">
-                {new Date(`${bill.month}-01`).toLocaleDateString("en-US", {
-                  month: "long",
-                  year: "numeric",
-                })}
+      <main className="max-w-7xl mx-auto px-5 sm:px-8 py-8">
+        {/* Two-column layout on larger screens */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 xl:gap-8">
+          {/* Left column - User Info + Filters */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* User Card */}
+            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/60 rounded-2xl p-6 shadow-xl shadow-black/30">
+              <h2 className="text-xl font-semibold mb-5 pb-3 border-b border-slate-600/70 flex items-center gap-3">
+                <span className="text-2xl">👤</span> Profile
+              </h2>
+              <div className="space-y-3 text-sm">
+                <p><span className="text-slate-400">Name:</span> <strong>{userdata?.name}</strong></p>
+                <p><span className="text-slate-400">Roll No:</span> <strong>{userdata?.rollno}</strong></p>
+                <p><span className="text-slate-400">Email:</span> <strong className="break-all">{userdata?.email}</strong></p>
               </div>
-
-              <span className="text-green-400 text-lg font-bold">
-                Total Amount: ₹{bill.totalAmount}
-              </span>
-
-              <button
-                onClick={handleDownloadPdf}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded cursor-pointer w-fit"
-              >
-                Download PDF
-              </button>
             </div>
 
-            {/* 🔹 DAYS TABLE */}
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm border border-slate-700">
-                <thead className="bg-slate-700">
-                  <tr>
-                    <th className="p-2 border">Date</th>
-                    <th className="p-2 border">Status</th>
-                    <th className="p-2 border">Charge</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Array.isArray(bill.days) && bill.days.length > 0 ? (
-                    bill.days.map((day, index) => (
-                      <tr
-                        key={index}
-                        className="text-center hover:bg-slate-700"
-                      >
-                        <td className="p-2 border">
-                          {new Date(day.date).toLocaleDateString("en-IN")}
-                        </td>
-                        <td className="p-2 border">
-                          {day.present ? "✅ Present" : "❌ Absent"}
-                        </td>
-                        <td className="p-2 border">
-                          ₹{day.present ? day.charge : 0}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan="3"
-                        className="p-3 text-center text-gray-400"
-                      >
-                        No days data available
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+            {/* Filters Card */}
+            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/60 rounded-2xl p-6 shadow-xl shadow-black/30">
+              <h3 className="text-lg font-semibold mb-5 pb-3 border-b border-slate-600/70">
+                Filter Bill
+              </h3>
+
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-sm text-slate-300 mb-2">Year</label>
+                  <select
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                    className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2.5 focus:outline-none focus:border-amber-500 transition-colors"
+                  >
+                    {years.length === 0 ? (
+                      <option value={selectedYear}>{selectedYear}</option>
+                    ) : (
+                      years.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))
+                    )}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm text-slate-300 mb-2">Month</label>
+                  <select
+                    value={selectedMonth}
+                    onChange={(e) => setSelectedMonth(e.target.value)}
+                    className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2.5 focus:outline-none focus:border-amber-500 transition-colors"
+                  >
+                    {["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"].map((m, i) => (
+                      <option key={m} value={m}>
+                        {new Date(0, i).toLocaleString("en-US", { month: "long" })}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
-        ))
-      )}
+
+          {/* Right column - Bill Display */}
+          <div className="lg:col-span-3">
+            {!filteredBill ? (
+              <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-10 text-center text-slate-400 text-lg">
+                No mess bill found for {new Date(`${selectedYear}-${selectedMonth}-01`).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+              </div>
+            ) : (
+              <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/60 rounded-2xl shadow-2xl shadow-black/30 overflow-hidden">
+                {/* Bill Header */}
+                <div className="bg-gradient-to-r from-slate-800 to-slate-700 p-6 border-b border-slate-600 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <h2 className="text-2xl font-bold">
+                    {new Date(`${filteredBill.month}-01`).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                  </h2>
+
+                  <div className="flex items-center gap-6">
+                    <div className="text-right">
+                      <div className="text-sm text-slate-300">Total Amount</div>
+                      <div className="text-2xl font-bold text-green-400">₹{filteredBill.totalAmount}</div>
+                    </div>
+
+                    <button
+                      onClick={() => handleDownloadPdf(filteredBill._id)}
+                      className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-6 py-3 rounded-lg font-medium shadow-lg shadow-blue-900/30 transition-all hover:shadow-blue-700/40 hover:-translate-y-0.5"
+                    >
+                      Download PDF
+                    </button>
+                  </div>
+                </div>
+
+                {/* Table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-slate-700/80">
+                      <tr>
+                        <th className="p-4 text-left font-semibold">Date</th>
+                        <th className="p-4 text-center font-semibold">Breakfast</th>
+                        <th className="p-4 text-center font-semibold">Lunch</th>
+                        <th className="p-4 text-center font-semibold">Dinner</th>
+                        <th className="p-4 text-center font-semibold">Extras</th>
+                        <th className="p-4 text-center font-semibold">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-700/50">
+                      {filteredBill.days.map((day, idx) => (
+                        <tr
+                          key={idx}
+                          className="hover:bg-slate-700/40 transition-colors"
+                        >
+                          <td className="p-4">
+                            {new Date(day.date).toLocaleDateString("en-IN", {
+                              day: "2-digit",
+                              month: "short",
+                            })}
+                          </td>
+                          <td className="p-4 text-center">₹{day.breakfast || 0}</td>
+                          <td className="p-4 text-center">₹{day.lunch || 0}</td>
+                          <td className="p-4 text-center">₹{day.dinner || 0}</td>
+                          <td className="p-4 text-center">₹{day.extras || 0}</td>
+                          <td className="p-4 text-center font-semibold text-green-400">
+                            ₹{day.total || 0}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
