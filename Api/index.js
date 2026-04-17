@@ -9,6 +9,7 @@ import cors from 'cors'
 import dotenv from "dotenv";
 import { Server } from "socket.io";
 import { createServer } from "node:http";
+import './cron/monthlyBill.js'
 dotenv.config();
 
 // console.log(process.env.MONGOURI);

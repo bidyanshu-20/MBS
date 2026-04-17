@@ -1,71 +1,7 @@
 import User from "../models/user.model.js";
 import messBill from "../models/messBilling.model.js";
 import { io } from "../index.js";
-// export const messbilling = async (req, res) => {
-//   try {
-//     const rollno = Number(req.params.rollno);
-//     const { month, days } = req.body;
-
-//     const user = await User.findOne({ rollno });
-
-//     if (!user) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "User not found",
-//       });
-//     }
-
-//     let bill = await messBill.findOne({ user: user._id, month });
-
-//     if (bill) {
-//       days.forEach((newDay) => {
-//         const index = bill.days.findIndex(
-//           (d) => d.date === newDay.date
-//         );
-
-//         if (index !== -1) {
-//           bill.days[index].charge =
-//             Number(bill.days[index].charge) + Number(newDay.charge);
-
-//           bill.days[index].present = newDay.present;
-//         } else {
-//           // add new day
-//           bill.days.push(newDay);
-//         }
-//       });
-
-//     } else {
-//       // create new bill
-//       bill = new messBill({
-//         user: user._id,
-//         rollno,
-//         month,
-//         days,
-//       });
-//     }
-
-//     // 🔢 RECALCULATE TOTAL
-//     bill.totalAmount = bill.days
-//       .filter(day => day.present)
-//       .reduce((sum, day) => sum + Number(day.charge), 0);
-
-//     await bill.save();
-
-//     res.status(200).json({
-//       success: true,
-//       bill,
-//     });
-
-//   } catch (error) {
-//     console.log("ERROR:", error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Bill save failed",
-//     });
-//   }
-// };
-// ------------------------------------------------------------ //
-
+import sendEmail from "../utils/sendEmail.js";
 
 
 export const messbilling = async (req, res) => {
@@ -86,8 +22,21 @@ export const messbilling = async (req, res) => {
 
     let bill = await messBill.findOne({ user: user._id, month });
 
-    // If bill exists → update days
-    // console.log("My pAST Billing is ", bill);
+    // Finding the User Old mess Billing
+    
+    let oldTotal = 0;
+    if (bill) {
+      oldTotal = bill.days.reduce((sum, d) => {
+        return (
+          sum +
+          (d.breakfast || 0) +
+          (d.lunch || 0) +
+          (d.dinner || 0) +
+          (d.extras || 0)
+        );
+      }, 0);
+    }
+
     if (bill) {
       days.forEach((newDay) => {
         const index = bill.days.findIndex(
@@ -129,7 +78,85 @@ export const messbilling = async (req, res) => {
     }
 
     await bill.save();
-    
+
+    // From here i am trying to add mailing system features
+
+    // ✅ NEW TOTAL (after update)
+    let newTotal = 0;
+    bill.days.forEach((d) => {
+      newTotal +=
+        (d.breakfast || 0) +
+        (d.lunch || 0) +
+        (d.dinner || 0) +
+        (d.extras || 0);
+    });
+
+    // ✅ CURRENT ADDED TOTAL
+    let addedTotal = 0;
+    days.forEach((d) => {
+      addedTotal +=
+        (Number(d.breakfast) || 0) +
+        (Number(d.lunch) || 0) +
+        (Number(d.dinner) || 0) +
+        (Number(d.extras) || 0);
+    });
+    const addedRows = days
+      .map(
+        (d) => `
+        <tr>
+          <td>${d.date}</td>
+          <td>${d.breakfast || 0}</td>
+          <td>${d.lunch || 0}</td>
+          <td>${d.dinner || 0}</td>
+          <td>${d.extras || 0}</td>
+          <td>
+            ${(Number(d.breakfast) || 0) +
+          (Number(d.lunch) || 0) +
+          (Number(d.dinner) || 0) +
+          (Number(d.extras) || 0)}
+          </td>
+        </tr>
+      `
+      )
+      .join("");
+
+    // ✅ SEND EMAIL ONLY IF TOTAL CHANGED
+    if (oldTotal !== newTotal) {
+      const html = `
+        <h2>Mess Bill Update</h2>
+
+        <p>Hello ${user.name},</p>
+        <p>New charges have been added for <b>${month}</b>.</p>
+
+        <h3>🆕 Recently Added Charges</h3>
+        <table border="1" cellpadding="5" cellspacing="0">
+          <tr>
+            <th>Date</th>
+            <th>Breakfast</th>
+            <th>Lunch</th>
+            <th>Dinner</th>
+            <th>Extras</th>
+            <th>Total</th>
+          </tr>
+          ${addedRows}
+        </table>
+
+        <h3>Added Amount: ₹ ${addedTotal}</h3>
+
+        <hr/>
+
+        <p><b>Previous Total:</b> ₹ ${oldTotal}</p>
+        <p><b>Updated Total:</b> ₹ ${newTotal}</p>
+
+        <p>Thank you.</p>
+      `;
+
+      sendEmail(user.email, "Mess Bill Updated", html)
+        .catch((err) => console.log("Email error:", err));
+    }
+
+
+
     // console.log("-->>>",user._id.toString());
     io.to(user._id.toString()).emit("new-bill", {
       message: "New mess bill added"

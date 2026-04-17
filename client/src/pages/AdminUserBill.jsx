@@ -1,8 +1,6 @@
 
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-// import { io } from "socket.io-client";
-// import { Socket } from "socket.io-client";
 const AdminUserBill = () => {
   const { rollno } = useParams();
   const navigate = useNavigate();
