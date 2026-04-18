@@ -13,7 +13,7 @@ const verifyUser = async (req, res, next) => {
     // console.log("AUTH HEADER:", req.headers.authorization);
 
 
-     const decoded = jwt.verify(token, "hghghghghgh");
+     const decoded = jwt.verify(token,process.env.SECRET_KEY);
 
     const user = await User.findById(decoded.id).select("-password");
     if (!user) {
