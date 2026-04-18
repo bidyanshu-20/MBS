@@ -11,6 +11,8 @@ import UpdateUser from "./pages/UpdateUser";
 import ForgotPassword from "./pages/ForgotPassword";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
+import Footer from "./components/Footer";
+
 
 function App() {
   return (
@@ -55,6 +57,7 @@ function App() {
         <Route path="/edit-profile" element={<UpdateUser />} />
         <Route path="/reset/password" element = {<ForgotPassword/>}/>
       </Routes>
+      <Footer/>
     </BrowserRouter>
   );
 }
