@@ -23,7 +23,7 @@ export let io;
 
 io = new Server(server, {
   cors: {
-    origin: "https://mbs-nine.vercel.app/",
+    origin: "https://mbs-nine.vercel.app",
     methods: ["GET", "POST", "PUT"]
   }
 });
@@ -44,7 +44,13 @@ io.on("connection", (socket) => {
 
 
 // const app = express();
-app.use(cors());
+// app.use(cors());
+
+app.use(cors({
+  origin: "https://mbs-nine.vercel.app", // ❗ no trailing slash
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 app.use(express.json());
 
 
