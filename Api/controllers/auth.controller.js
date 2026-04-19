@@ -57,13 +57,6 @@ export const signin = async (req, res, next) => {
                 message: "Invalid credentials"
             });
         }
-
-        // if (validUser.role !== role) {
-        //     return res.status(403).json({
-        //         message: `You are not registered as ${role}`,
-        //     });
-        // }
-
         const token = jwt.sign({ id: validUser._id }, process.env.SECRET_KEY);
 
         const { password: pass, ...rest } = validUser._doc;
@@ -119,17 +112,6 @@ export const updateUserProfile = async (req, res) => {
 
             updateFields.rollno = rollno;
         }
-        // if()
-
-
-        // Update password if provided
-        // if (password) {
-        //     const salt = await bcrypt.genSalt(10);
-        //     const hashedPassword = await bcrypt.hash(password, salt);
-        //     updateFields.password = hashedPassword;
-        // }
-
-        // If nothing to update
         if (Object.keys(updateFields).length === 0) {
             return res.status(400).json({
                 success: false,
