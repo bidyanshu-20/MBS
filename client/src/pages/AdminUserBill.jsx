@@ -91,9 +91,12 @@ const AdminUserBill = () => {
   // ✅ SAVE BILL
   const saveBill = async () => {
     try {
+
+      const token = localStorage.getItem("token");
+      
       const res = await fetch(`https://mbs-obwq.onrender.com/api/admin/messbill/${rollno}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",Authorization: `Bearer ${token}`, },
         credentials: "include",
         body: JSON.stringify({ month, days }),
       });
