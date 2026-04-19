@@ -27,7 +27,7 @@ const SignUp = () => {
       // console.log(formData);
       setLoading(true);
       // console.log("Data is submitted");
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch("https://mbs-obwq.onrender.com/api/auth/signup", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
