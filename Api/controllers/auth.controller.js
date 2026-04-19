@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 
 export const signup = async (req, res, next) => {
 
-    // console.log(req.body);
+    console.log(req.body);
 
     const { name, email, password, rollno } = req.body;
 
@@ -42,7 +42,7 @@ export const signin = async (req, res, next) => {
     const { email, password } = req.body;
     try {
         const validUser = await User.findOne({ email });
-        // console.log({email,password});
+        console.log({email,password});
         if (!validUser) {
             return res.status(404).json({
                 success: false,
