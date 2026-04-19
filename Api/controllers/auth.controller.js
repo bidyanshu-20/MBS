@@ -66,7 +66,7 @@ export const signin = async (req, res, next) => {
             token,
             user: rest
         });
-
+        console.log("SIGN IN SUCCESSFULLY......");
     }
     catch (error) {
         next(error);
