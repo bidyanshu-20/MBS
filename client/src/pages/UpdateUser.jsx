@@ -22,7 +22,7 @@ function UpdateUser() {
       try {
         const token = localStorage.getItem("token");
 
-        const res = await fetch("/api/user/messbill", {
+        const res = await fetch("https://mbs-obwq.onrender.com/api/user/messbill", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -68,7 +68,7 @@ function UpdateUser() {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch("/api/auth/update", {
+      const res = await fetch("https://mbs-obwq.onrender.com/api/auth/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

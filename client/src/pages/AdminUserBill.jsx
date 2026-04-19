@@ -47,7 +47,7 @@ const AdminUserBill = () => {
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        `/api/admin/messbill/${rollno}?month=${month}`,
+        `https://mbs-obwq.onrender.com/api/admin/messbill/${rollno}?month=${month}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -91,7 +91,7 @@ const AdminUserBill = () => {
   // ✅ SAVE BILL
   const saveBill = async () => {
     try {
-      const res = await fetch(`/api/admin/messbill/${rollno}`, {
+      const res = await fetch(`https://mbs-obwq.onrender.com/api/admin/messbill/${rollno}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

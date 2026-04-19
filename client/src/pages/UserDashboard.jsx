@@ -42,7 +42,7 @@ const UserDashboard = () => {
   const fetchBills = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("/api/user/messbill", {
+      const res = await fetch("https://mbs-obwq.onrender.com/api/user/messbill", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -80,27 +80,6 @@ const UserDashboard = () => {
     fetchBills();
   }, []);
 
-  // useEffect(async () => {
-  //   // console.log("=====>", data.user)
-  //   // console.log("---->", bills);
-  //   const bills = await bills.find()
-  //     .populate("user");
-  //     console.log(bills)
-  // })
-
-
-  // useEffect(() => {
-  //    if (!userId || !socket.current) return;
-  //   socket.emit("joinRoom", userId);
-  //   console.log("---->", userId);
-  //   socket.on("newBillAdded", (bill) => {
-  //     setBills((prev) => [...prev, bill]);
-  //   });
-
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, [userId]);
 
   useEffect(() => {
     if (!userId || !socket.current) return;

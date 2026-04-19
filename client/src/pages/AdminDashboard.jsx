@@ -11,7 +11,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch("/api/admin/users", {
+    fetch("https://mbs-obwq.onrender.com/api/admin/users", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -34,7 +34,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch(`/api/auth/admin/delete/user/${userId}`, {
+      const response = await fetch(`https://mbs-obwq.onrender.com/api/auth/admin/delete/user/${userId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
