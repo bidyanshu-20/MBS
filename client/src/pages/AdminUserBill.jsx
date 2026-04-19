@@ -97,7 +97,6 @@ const AdminUserBill = () => {
       const res = await fetch(`https://mbs-obwq.onrender.com/api/admin/messbill/${rollno}`, {
         method: "POST",
         headers: { "Content-Type": "application/json",Authorization: `Bearer ${token}`, },
-        credentials: "include",
         body: JSON.stringify({ month, days }),
       });
 
