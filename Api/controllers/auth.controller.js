@@ -42,7 +42,7 @@ export const signin = async (req, res, next) => {
     const { email, password } = req.body;
     try {
         const validUser = await User.findOne({ email });
-        console.log({email,password});
+        // console.log({email,password});
         if (!validUser) {
             return res.status(404).json({
                 success: false,
@@ -66,7 +66,7 @@ export const signin = async (req, res, next) => {
             token,
             user: rest
         });
-        console.log("SIGN IN SUCCESSFULLY......");
+        // console.log("SIGN IN SUCCESSFULLY......");
     }
     catch (error) {
         next(error);

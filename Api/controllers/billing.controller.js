@@ -9,7 +9,7 @@ export const messbilling = async (req, res) => {
     const rollno = req.params.rollno;   // keep as string
     const { month, days } = req.body;
 
-    console.log("BODY RECEIVED:", req.body);
+    // console.log("BODY RECEIVED:", req.body);
 
     const user = await User.findOne({ rollno });
 
