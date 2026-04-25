@@ -24,7 +24,7 @@ const Login = () => {
       toast.warning("Please fill all fields");
       return;
     }
-
+    console.log("BACKEND URL ",BACKEND_URL);
     setLoading(true);
     try {
       const res = await fetch(`${BACKEND_URL}/api/auth/signin`, {
