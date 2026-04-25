@@ -30,8 +30,13 @@ const UserDashboard = () => {
   const socket = useRef(null);
 
   useEffect(() => {
-    socket.current = io("http://localhost:3400");
-
+    // socket.current = io("http://localhost:3400");
+    socket.current = io("https://mbs-obwq.onrender.com", {
+      transports: ["websocket"],
+    });
+    socket.current.on("connect", () => {
+      console.log(" Socket connected:", socket.current.id);
+    });
     return () => {
       socket.current.disconnect();
     };
