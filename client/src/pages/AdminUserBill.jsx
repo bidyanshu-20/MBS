@@ -88,14 +88,14 @@ const AdminUserBill = () => {
   };
 
   // ADDED
+
   useEffect(() => {
-    if (userId) {
-      socket.emit("joinRoom", userId);
-      console.log(" Joined room:", userId);
-    }
+    if (!userId) return;
+
+    socket.emit("joinRoom", userId);
+    console.log("Joined room:", userId);
+
   }, [userId]);
-
-
 
   //  ADDED
   useEffect(() => {
@@ -109,14 +109,13 @@ const AdminUserBill = () => {
     return () => {
       socket.off("new-bill");
     };
-  }, [rollno, month]);
+  }, []);
 
-
-  // useEffect(() => {
-  //   // if (rollno && month) {
-  //   fetchSavedBills();
-  //   // }
-  // }, [rollno, month])
+  useEffect(() => {
+    // if (rollno && month) {
+    fetchSavedBills();
+    // }
+  }, [rollno, month])
 
 
   const handleDelete = (biilId) => {
