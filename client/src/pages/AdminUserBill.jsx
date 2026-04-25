@@ -30,7 +30,14 @@ const AdminUserBill = () => {
 
   const handleChange = (index, field, value) => {
     const updated = [...days];
-    updated[index][field] = field === "date" ? value : Number(value);
+
+    if (field === "date") {
+      updated[index][field] = value;
+    } else {
+      const num = parseFloat(value);
+      updated[index][field] = isNaN(num) ? 0 : num;
+    }
+
     setDays(updated);
   };
 
@@ -105,11 +112,6 @@ const AdminUserBill = () => {
       if (data.success) {
         alert("Mess bill saved successfully");
         setSavedBill(data.bill);
-        // socket.emit("billAdded", {
-        //   userId,
-        //   bill: savedBill
-        // });
-        // after saving bill
         setDays([]); // optional reset
       } else {
         alert("Failed to save bill");
@@ -181,7 +183,7 @@ const AdminUserBill = () => {
             />
 
             <input
-              type="number"
+              type="text"
               placeholder="Breakfast"
               className="bg-slate-800 px-3 py-2 rounded-lg w-full"
               value={day.breakfast}
@@ -189,7 +191,7 @@ const AdminUserBill = () => {
             />
 
             <input
-              type="number"
+              type="text"
               placeholder="Lunch"
               className="bg-slate-800 px-3 py-2 rounded-lg w-full"
               value={day.lunch}
@@ -197,7 +199,7 @@ const AdminUserBill = () => {
             />
 
             <input
-              type="number"
+              type="text"
               placeholder="Dinner"
               className="bg-slate-800 px-3 py-2 rounded-lg w-full"
               value={day.dinner}
@@ -205,7 +207,7 @@ const AdminUserBill = () => {
             />
 
             <input
-              type="number"
+              type="text"
               placeholder="Extras"
               className="bg-slate-800 px-3 py-2 rounded-lg w-full"
               value={day.extras}
