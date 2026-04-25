@@ -28,7 +28,6 @@ io = new Server(server, {
   }
 });
 
-// ✅ SOCKET CONNECTION
 io.on("connection", (socket) => {
   console.log("User Connected:", socket.id);
 
@@ -42,9 +41,6 @@ io.on("connection", (socket) => {
   });
 });
 
-
-// const app = express();
-// app.use(cors());
 
 app.use(cors({
   origin: "https://mbs-nine.vercel.app", // ❗ no trailing slash

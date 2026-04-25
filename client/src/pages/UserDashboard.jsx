@@ -16,6 +16,10 @@ const UserDashboard = () => {
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear().toString());
   const [selectedMonth, setSelectedMonth] = useState((currentDate.getMonth() + 1).toString().padStart(2, "0"));
 
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+
   useEffect(() => {
     const monthsForYear = bills
       .filter((bill) => bill.month.startsWith(selectedYear))
@@ -30,8 +34,8 @@ const UserDashboard = () => {
   const socket = useRef(null);
 
   useEffect(() => {
-    // socket.current = io("http://localhost:3400");
-    socket.current = io("https://mbs-obwq.onrender.com", {
+
+    socket.current = io(`${BACKEND_URL}`, {
       transports: ["websocket"],
     });
     socket.current.on("connect", () => {
@@ -47,7 +51,7 @@ const UserDashboard = () => {
   const fetchBills = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("https://mbs-obwq.onrender.com/api/user/messbill", {
+      const res = await fetch(`${BACKEND_URL}/api/user/messbill`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -79,8 +83,6 @@ const UserDashboard = () => {
     }
   };
 
-  // fetchBills();
-  // }, []);
   useEffect(() => {
     fetchBills();
   }, []);
@@ -90,11 +92,11 @@ const UserDashboard = () => {
     if (!userId || !socket.current) return;
 
     socket.current.emit("joinRoom", userId);
-    console.log("Joined room:", userId);
+    // console.log("Joined room:", userId);
 
     socket.current.on("new-bill", () => {
-      console.log("New bill received!");
-      fetchBills();   // 🔥 realtime refresh
+      // console.log("New bill received!");
+      fetchBills();
     });
 
     return () => {
