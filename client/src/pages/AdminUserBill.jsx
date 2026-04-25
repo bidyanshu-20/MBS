@@ -149,9 +149,6 @@ const AdminUserBill = () => {
       console.error(err);
     }
   };
-  // console.log("roll no is:",rollno);
-  // console.log(typeof rollno);
-  // ✅ FETCH SAVED BILL
 
 
 
