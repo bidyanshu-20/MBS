@@ -7,12 +7,11 @@ const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch(`${BACKEND_URL}/api/admin/users`, {
+    fetch("https://mbs-obwq.onrender.com/api/admin/users", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -35,7 +34,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch(`${BACKEND_URL}/api/auth/admin/delete/user/${userId}`, {
+      const response = await fetch(`https://mbs-obwq.onrender.com/api/auth/admin/delete/user/${userId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -88,7 +87,7 @@ const AdminDashboard = () => {
           </div>
 
           <div className="w-full md:w-72">
-            <Search search={search} onSearchChange={(e) => setSearch(e.target.value)} />
+            <Search search={search} onSearchChange={(e)=>setSearch(e.target.value)} />
           </div>
 
         </div>
@@ -116,7 +115,7 @@ const AdminDashboard = () => {
                   key={user._id}
                   className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-0 px-4 py-4 border-b border-slate-800 hover:bg-slate-800/50 transition"
                 >
-
+                  
                   {/* Roll */}
                   <div className="text-sm sm:text-base font-mono">
                     <span className="sm:hidden font-semibold">Roll: </span>

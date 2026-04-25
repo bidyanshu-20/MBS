@@ -16,12 +16,10 @@ const SignUp = () => {
     });
   };
   const navigate = useNavigate();
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.password || !formData.rollno) {
+    if (!formData.name || !formData.email || !formData.password || !formData.rollno ) {
       toast.warning("Please fill all fields");
       return;
     }
@@ -29,7 +27,7 @@ const SignUp = () => {
       // console.log(formData);
       setLoading(true);
       // console.log("Data is submitted");
-      const res = await fetch(`${BACKEND_URL}/api/auth/signup`, {
+      const res = await fetch("https://mbs-obwq.onrender.com/api/auth/signup", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +46,7 @@ const SignUp = () => {
       }
       setLoading(false);
       setError(null);
-      toast.success("Account created successfully ");
+      toast.success("Account created successfully 🎉");
 
       setTimeout(() => {
         navigate('/login');

@@ -8,8 +8,6 @@ const Login = () => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const handleChange = (e) => {
     setFormData({
@@ -24,10 +22,10 @@ const Login = () => {
       toast.warning("Please fill all fields");
       return;
     }
-    console.log("BACKEND URL ",BACKEND_URL);
+
     setLoading(true);
     try {
-      const res = await fetch(`${BACKEND_URL}/api/auth/signin`, {
+      const res = await fetch("https://mbs-obwq.onrender.com/api/auth/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

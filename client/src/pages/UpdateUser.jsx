@@ -7,8 +7,6 @@ import "react-toastify/dist/ReactToastify.css";
 function UpdateUser() {
   const navigate = useNavigate();
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,7 +22,7 @@ function UpdateUser() {
       try {
         const token = localStorage.getItem("token");
 
-        const res = await fetch(`{BACKEND_URL}/api/user/messbill`, {
+        const res = await fetch("https://mbs-obwq.onrender.com/api/user/messbill", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -70,7 +68,7 @@ function UpdateUser() {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch(`${BACKEND_URL}/api/auth/update`, {
+      const res = await fetch("https://mbs-obwq.onrender.com/api/auth/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -208,9 +206,10 @@ function UpdateUser() {
                 className={`
                   flex-1 py-3 px-6 rounded-lg font-medium text-white
                   transition-all duration-200 flex items-center justify-center gap-2 shadow-lg
-                  ${submitting
-                    ? "bg-indigo-600/50 cursor-not-allowed shadow-none"
-                    : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-[0.98] shadow-indigo-900/30 hover:shadow-indigo-700/50"
+                  ${
+                    submitting
+                      ? "bg-indigo-600/50 cursor-not-allowed shadow-none"
+                      : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-[0.98] shadow-indigo-900/30 hover:shadow-indigo-700/50"
                   }
                 `}
               >

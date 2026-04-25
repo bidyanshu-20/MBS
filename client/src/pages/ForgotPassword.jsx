@@ -10,9 +10,6 @@ const ForgotPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
-
   const sendOtp = async () => {
     if (!email) {
       toast.warning("Please enter your email");
@@ -20,7 +17,7 @@ const ForgotPassword = () => {
     }
     setLoading(true);
     try {
-      const res = await fetch(`${BACKEND_URL}/api/auth/forgot-password`, {
+      const res = await fetch("https://mbs-obwq.onrender.com/api/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -48,7 +45,7 @@ const ForgotPassword = () => {
     }
     setLoading(true);
     try {
-      const res = await fetch(`${BACKEND_URL}/api/auth/verify-otp`, {
+      const res = await fetch("https://mbs-obwq.onrender.com/api/auth/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
@@ -76,7 +73,7 @@ const ForgotPassword = () => {
     }
     setLoading(true);
     try {
-      const res = await fetch(`${BACKEND_URL}/api/auth/reset-password`, {
+      const res = await fetch("https://mbs-obwq.onrender.com/api/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp, newPassword }),
@@ -143,10 +140,11 @@ const ForgotPassword = () => {
                 <button
                   onClick={sendOtp}
                   disabled={loading}
-                  className={`w-full py-3.5 px-6 font-semibold text-lg rounded-xl shadow-lg transform transition-all duration-300 ${loading
+                  className={`w-full py-3.5 px-6 font-semibold text-lg rounded-xl shadow-lg transform transition-all duration-300 ${
+                    loading
                       ? "bg-slate-700 cursor-not-allowed"
                       : "bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 hover:shadow-orange-500/40 hover:-translate-y-1 active:scale-[0.98]"
-                    } text-white flex items-center justify-center gap-3`}
+                  } text-white flex items-center justify-center gap-3`}
                 >
                   {loading ? (
                     <>
@@ -184,10 +182,11 @@ const ForgotPassword = () => {
                 <button
                   onClick={verifyOtp}
                   disabled={loading}
-                  className={`w-full py-3.5 px-6 font-semibold text-lg rounded-xl shadow-lg transform transition-all duration-300 ${loading
+                  className={`w-full py-3.5 px-6 font-semibold text-lg rounded-xl shadow-lg transform transition-all duration-300 ${
+                    loading
                       ? "bg-slate-700 cursor-not-allowed"
                       : "bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 hover:shadow-orange-500/40 hover:-translate-y-1 active:scale-[0.98]"
-                    } text-white flex items-center justify-center gap-3`}
+                  } text-white flex items-center justify-center gap-3`}
                 >
                   {loading ? "Verifying..." : "Verify OTP"}
                 </button>
@@ -214,10 +213,11 @@ const ForgotPassword = () => {
                 <button
                   onClick={resetPassword}
                   disabled={loading}
-                  className={`w-full py-3.5 px-6 font-semibold text-lg rounded-xl shadow-lg transform transition-all duration-300 ${loading
+                  className={`w-full py-3.5 px-6 font-semibold text-lg rounded-xl shadow-lg transform transition-all duration-300 ${
+                    loading
                       ? "bg-slate-700 cursor-not-allowed"
                       : "bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 hover:shadow-orange-500/40 hover:-translate-y-1 active:scale-[0.98]"
-                    } text-white flex items-center justify-center gap-3`}
+                  } text-white flex items-center justify-center gap-3`}
                 >
                   {loading ? "Resetting..." : "Reset Password"}
                 </button>

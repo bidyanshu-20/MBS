@@ -16,10 +16,6 @@ const UserDashboard = () => {
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear().toString());
   const [selectedMonth, setSelectedMonth] = useState((currentDate.getMonth() + 1).toString().padStart(2, "0"));
 
-
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
-
   useEffect(() => {
     const monthsForYear = bills
       .filter((bill) => bill.month.startsWith(selectedYear))
@@ -34,8 +30,8 @@ const UserDashboard = () => {
   const socket = useRef(null);
 
   useEffect(() => {
-
-    socket.current = io(`${BACKEND_URL}`, {
+    
+    socket.current = io("https://mbs-obwq.onrender.com", {
       transports: ["websocket"],
     });
     socket.current.on("connect", () => {
@@ -51,7 +47,7 @@ const UserDashboard = () => {
   const fetchBills = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${BACKEND_URL}/api/user/messbill`, {
+      const res = await fetch("https://mbs-obwq.onrender.com/api/user/messbill", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
