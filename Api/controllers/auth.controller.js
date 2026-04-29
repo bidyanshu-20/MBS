@@ -207,6 +207,8 @@ export const handleForgotpassword = async (req, res) => {
         res.status(200).json({ message: "Otp sent your email" });
     }
     catch (error) {
+        console.log("---->");
+        console.error("Forgot Password Error:", error);
         res.status(500).json({ success: false, message: "Internal server Error..." })
     }
 }
