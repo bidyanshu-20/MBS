@@ -81,7 +81,7 @@ export const messbilling = async (req, res) => {
 
     // From here i am trying to add mailing system features
 
-    // ✅ NEW TOTAL (after update)
+    //  NEW TOTAL (after update)
     let newTotal = 0;
     bill.days.forEach((d) => {
       newTotal +=
@@ -91,7 +91,7 @@ export const messbilling = async (req, res) => {
         (d.extras || 0);
     });
 
-    // ✅ CURRENT ADDED TOTAL
+    //  CURRENT ADDED TOTAL
     let addedTotal = 0;
     days.forEach((d) => {
       addedTotal +=
@@ -120,7 +120,7 @@ export const messbilling = async (req, res) => {
       )
       .join("");
 
-    // ✅ SEND EMAIL ONLY IF TOTAL CHANGED
+    //  SEND EMAIL ONLY IF TOTAL CHANGED
     if (oldTotal !== newTotal) {
       const html = `
         <h2>Mess Bill Update</h2>
