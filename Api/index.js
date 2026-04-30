@@ -1,4 +1,4 @@
-import dns from "dns";
+
 import express from 'express';  // Import the Express module
 import mongoose from 'mongoose';
 import userRouter from './routes/user.route.js';
@@ -13,7 +13,6 @@ import { createServer } from "node:http";
 import './cron/monthlyBill.js'
 dotenv.config();
 
-dns.setDefaultResultOrder("ipv4first");
 // console.log(process.env.MONGOURI);
 mongoose.connect(process.env.MONGOURI).then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
